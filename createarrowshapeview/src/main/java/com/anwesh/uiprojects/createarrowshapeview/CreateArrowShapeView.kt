@@ -212,4 +212,13 @@ class CreateArrowShapeView(ctx : Context) : View(ctx) {
             }
         }
     }
+
+    companion object {
+
+        fun create(activity: Activity) : CreateArrowShapeView {
+            val view : CreateArrowShapeView = CreateArrowShapeView(activity)
+            activity.setContentView(view)
+            return view
+        }
+    }
 }
