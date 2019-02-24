@@ -189,4 +189,26 @@ class CreateArrowShapeView(ctx : Context) : View(ctx) {
             curr.startUpdating(cb)
         }
     }
+
+    data class Renderer(var view : CreateArrowShapeView) {
+
+        private val animator : Animator = Animator(view)
+        private val cas : CreateArrowShape = CreateArrowShape(0)
+
+        fun render(canvas : Canvas, paint : Paint) {
+            canvas.drawColor(backColor)
+            cas.draw(canvas, paint)
+            animator.animate {
+                cas.update {i, scl ->
+                    animator.stop()
+                }
+            }
+        }
+
+        fun handleTap() {
+            cas.startUpdating {
+                animator.start()
+            }
+        }
+    }
 }
