@@ -27,19 +27,20 @@ fun Float.divideScale(i : Int, n : Int) : Float = Math.min(n.inverse(), maxScale
 fun Float.scaleFactor() : Float = Math.floor(this / scDiv).toFloat()
 fun Float.mirrorValue(a : Int, b : Int) : Float = (1 - scaleFactor()) * a.inverse() + scaleFactor() * b.inverse()
 fun Float.updateValue(dir : Float, a : Int, b : Int) : Float = mirrorValue(a, b) * dir * scGap
-
+fun Int.sf() : Float = 1f - 2 * this
+fun Int.scf() : Float = (this % 2).toFloat()
 fun Canvas.drawRotatedLine(y : Float, size : Float, rot : Float, paint : Paint) {
     save()
     translate(0f, y)
     rotate(rot)
-    drawLine(0f, 0f, size, 0f, paint)
+    drawLine(0f, 0f, 0f, size, paint)
     restore()
 }
 
 fun Canvas.drawCASNode(i : Int, scale : Float, paint : Paint) {
     val w : Float = width.toFloat()
     val h : Float = height.toFloat()
-    val gap : Float = w / (nodes + 1)
+    val gap : Float = h / (nodes + 1)
     val size : Float = gap / sizeFactor
     paint.color = foreColor
     paint.strokeWidth = Math.min(w, h) / strokeFactor
@@ -47,13 +48,15 @@ fun Canvas.drawCASNode(i : Int, scale : Float, paint : Paint) {
     val sc1 : Float = scale.divideScale(0, lines)
     val sc2 : Float = scale.divideScale(1, lines)
     save()
-    translate(gap * (i + 1), h/2 - size)
+    translate(w / 2, gap * (i + 1))
+    rotate(180f * i.scf())
+    translate(0f, -size)
     drawLine(0f, 0f, 0f, size, paint)
     for (j in 0..(lines - 1)) {
         val sc1j : Float = sc1.divideScale(j, lines)
         val sc2j : Float = sc2.divideScale(j, lines)
-        drawRotatedLine(-size, size/4, 45f * sc1j, paint)
-        drawRotatedLine(0f, size, 45f * (1 - sc2j), paint)
+        drawRotatedLine(0f, size/2, 45f * j.sf() * sc1j, paint)
+        drawRotatedLine(size, size, 45f * j.sf() * (1 - sc2j), paint)
     }
     restore()
 }
