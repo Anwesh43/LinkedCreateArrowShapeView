@@ -20,6 +20,7 @@ val sizeFactor : Float = 2.9f
 val strokeFactor : Int = 90
 val foreColor : Int = Color.parseColor("#4527A0")
 val backColor : Int = Color.parseColor("#212121")
+val delay : Long = 20
 
 fun Int.inverse() : Float = 1f / this
 fun Float.maxScale(i : Int, n : Int) : Float = Math.max(0f, this - i * n.inverse())
@@ -29,6 +30,7 @@ fun Float.mirrorValue(a : Int, b : Int) : Float = (1 - scaleFactor()) * a.invers
 fun Float.updateValue(dir : Float, a : Int, b : Int) : Float = mirrorValue(a, b) * dir * scGap
 fun Int.sf() : Float = 1f - 2 * this
 fun Int.scf() : Float = (this % 2).toFloat()
+
 fun Canvas.drawRotatedLine(y : Float, size : Float, rot : Float, paint : Paint) {
     save()
     translate(0f, y)
@@ -105,7 +107,7 @@ class CreateArrowShapeView(ctx : Context) : View(ctx) {
             if (animated) {
                 cb()
                 try {
-                    Thread.sleep(50)
+                    Thread.sleep(delay)
                     view.invalidate()
                 } catch(ex : Exception) {
 
